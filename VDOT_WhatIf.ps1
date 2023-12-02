@@ -1,7 +1,7 @@
 ﻿#Change directory to the  directory of your configuration files
 #Example c:\Virtual-Desktop-Optimization-Tool\2009
 
-$FileName = "VDOT_WhatIf_" + (get-date -format 'MMddyyyy_hhmmss') +".txt"
+$FileName = "VDOT_WhatIf_" + (Get-Date -Format 'MMddyyyy_hhmmss') + ".txt"
 New-Item $FileName | Out-Null
 
 $AppxConfigFilePath = ".\ConfigurationFiles\AppxPackages.json"
@@ -21,12 +21,12 @@ $UserSettings | Out-File $FileName -Append
 
 $AutoLoggersFilePath = ".\ConfigurationFiles\Autologgers.Json"
 $DisabledAutologgers = (Get-Content $AutoLoggersFilePath | ConvertFrom-Json).Where( { $_.Disabled -eq 'True' })
-"Auto Loggers"  | Out-File $FileName -Append
+"Auto Loggers" | Out-File $FileName -Append
 $DisabledAutologgers | Out-File $FileName -Append
 
 $ServicesFilePath = ".\ConfigurationFiles\Services.json"
 $DisabledServices = (Get-Content $ServicesFilePath | ConvertFrom-Json ).Where( { $_.VDIState -eq 'Disabled' })
-"Disabled Services"  | Out-File $FileName -Append
+"Disabled Services" | Out-File $FileName -Append
 $DisabledServices | Out-File $FileName -Append
 
 $NetworkOptimizationsFilePath = ".\ConfigurationFiles\LanManWorkstation.json"

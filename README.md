@@ -9,17 +9,17 @@
 
 ## Introduction
 
-The Virtual Desktop Optimization Tool (VDOT) is a set of mostly text-based tools that apply settings to a Windows operating system, intended to improve performance.  The performance gains are in overall startup time, first logon time, subsequent logon time, and usability during a user-session.  
+The Virtual Desktop Optimization Tool (VDOT) is a set of mostly text-based tools that apply settings to a Windows operating system, intended to improve performance.  The performance gains are in overall startup time, first logon time, subsequent logon time, and usability during a user-session.
 
-The VDOT tool came about from years of performance tuning of on-premises Virtual Desktop Infrastructure (VDI).  Some of those VDI implementations were not Internet-connected, or limited Internet-connected, rendering some features and/or functionality of Windows non-functional.  Instead of having non-functional components running, those items that could be disabled or removed in a supported manner, were done so.  The result was faster startup, login, and smoother user throughout user sessions.  
+The VDOT tool came about from years of performance tuning of on-premises Virtual Desktop Infrastructure (VDI).  Some of those VDI implementations were not Internet-connected, or limited Internet-connected, rendering some features and/or functionality of Windows non-functional.  Instead of having non-functional components running, those items that could be disabled or removed in a supported manner, were done so.  The result was faster startup, login, and smoother user throughout user sessions.
 
 Later when Azure Virtual Desktop (AVD) came about, the VDOT tool was meticulously gone over, and made to support AVD, in a manner that would not degrade the user interface, reduce functionality, or in any way impair the AVD session hosts.  Input was received and implemented from the Microsoft Windows and Azure Virtual Desktop product groups.
 
-As the VDOT tool exists now, it is compatible with a wide-range of systems.  It works on VDI, AVD, stand-alone Windows, Windows Server (with some caveats), and some optimizations are even applied to the Windows 365 offering.  
+As the VDOT tool exists now, it is compatible with a wide-range of systems.  It works on VDI, AVD, stand-alone Windows, Windows Server (with some caveats), and some optimizations are even applied to the Windows 365 offering.
 
 The optimization settings in this tool are the ***potential*** settings that reduce compute activity, and thus increase user density per host.  It is important to test the optimization settings in each respective environment, and adjust settings as needed.
 
-The files that determine what to disable, remove, or set as policy, are in text-based .JSON files, in the respective OS version folder (ex. '2009').  *The JSON parameter that this tool uses to determine whether or not to apply a setting is **'VDIState'***.  If the 'VDIState' parameter in the respective .JSON file is set to **Disabled**, the optimization setting will be applied.  If 'VDIState' is set to anything else, the setting will not be applied.  
+The files that determine what to disable, remove, or set as policy, are in text-based .JSON files, in the respective OS version folder (ex. '2009').  *The JSON parameter that this tool uses to determine whether or not to apply a setting is **'VDIState'***.  If the 'VDIState' parameter in the respective .JSON file is set to **Disabled**, the optimization setting will be applied.  If 'VDIState' is set to anything else, the setting will not be applied.
 
  > [!NOTE]
  > This script takes a few minutes to complete. The total runtime will be presented at the end, in the status output messages.  A prompt to reboot will appear when the script has completely finished running. Wait for this prompt to confirm the script has successfully completed.  A reboot is necessary because several items cannot be stopped in the current session.
@@ -31,14 +31,14 @@ The "-verbose" parameter in PowerShell directs the script to provide descriptive
 
 ### "All" parameter set behavior has changed
 
-Up until now, you could run this command:  
-```.\Windows_VDOT.ps1 -Verbose -AcceptEula```  
-and a core set of optimizations would run.  Now if you run the above command you receive a message back:  
+Up until now, you could run this command:
+```.\Windows_VDOT.ps1 -Verbose -AcceptEula```
+and a core set of optimizations would run.  Now if you run the above command you receive a message back:
 
 ![VDOT_Param_Notice](/Images/VDOT_Default_Important_Notice.png)
 
 
-That equivalent functionality going forward is:  
+That equivalent functionality going forward is:
 ```.\Windows_VDOT.ps1 -Optimizations All -Verbose -AcceptEula```.
 
 This change came about when more categories of optimizations were added, some of which may not be desirable to everyone, so the new optimizations were added to a new parameter set called **AdvancedOptimizations**.  The new parameter set contains **Edge Chromium optimizations**, the ability to **remove Internet Explorer 11 payload**, and **remove the built-in OneDrive app**.  With the AdvancedOptimizations parameter set, you can run one or all of the optimizations just mentioned.
@@ -51,7 +51,7 @@ Windows 11 in some respects, reports the same as Windows 10, to various configur
 
 ### Microsoft Edge (Chromium) optimizations
 
-The current version of Edge in Windows 10, as of 07/29/2022, is Microsoft Edge (Chromium based).  There are a set of policy template files specific to the new Edge.  The VDOT tool now has the following optimization options for Microsoft Edge:  
+The current version of Edge in Windows 10, as of 07/29/2022, is Microsoft Edge (Chromium based).  There are a set of policy template files specific to the new Edge.  The VDOT tool now has the following optimization options for Microsoft Edge:
 
 * Set Edge as the default app for common Internet file types (using 'DefaultAssociations.xml' file and policy)
 * Allow Edge to start processes at sign-in, whether or not the Edge app itself is started
@@ -65,7 +65,7 @@ The current version of Edge in Windows 10, as of 07/29/2022, is Microsoft Edge (
 The AppxPackages.json manifest, regardless of version of Windows, now has the "**VDIState**" set to "***Unchanged***". The reason is that there is not a "recommended" list of apps to remove for all environments. In each case, if you want to remove a Universal Windows Platform (UWP) application, change the "VDIState" value from **Unchanged** to **"Disabled"**.
 
  > [!NOTE]
- > The VDOT tool not only removes UWP apps for "AllUsers", it removes the app payload.  Once a UWP app payload is removed, it cannot be re-provisioned to that system.  The only way to re-provision a  removed app payload is reset the device, reinstall, or re-image.  
+ > The VDOT tool not only removes UWP apps for "AllUsers", it removes the app payload.  Once a UWP app payload is removed, it cannot be re-provisioned to that system.  The only way to re-provision a  removed app payload is reset the device, reinstall, or re-image.
 Users can still reinstall a VDOT removed app through the Store app, if Internet connected.  If not Internet connected, the apps cannot be reinstalled.  This is why VDOT does not remove the Store app, nor do we recommend that the Store app be removed.  [***Here is an article***](https://docs.microsoft.com/en-us/troubleshoot/windows-client/shell-experience/cannot-remove-uninstall-or-reinstall-microsoft-store-app) on the Store app.
 
 ### "-Optimizations" parameter and new "-AdvancedOptimizations" parameters
@@ -101,30 +101,30 @@ The result is that you could run as many, as few, or even one sub-parameter cont
 
 We have added the ability to remove the built-in OneDrive app.  Removal of the OneDrive app is applicable for example, to air-gapped clouds.  There is an associated OneDrive app sync that can be removed in the AppxPackages optimization category.  The OneDrive app can be added back.  The sub-parameter to remove the OneDrive app is in the parameter "-AdvancedOptimizations".  Removal of the OneDrive app is not a default setting and can only be initiated by selecting one of the two following options:
 
-   **.\Windows_VDOT.ps1 -AdvancedOptimizations RemoveOneDrive**    
+   **.\Windows_VDOT.ps1 -AdvancedOptimizations RemoveOneDrive**
    **.\Windows_VDOT.ps1 -AdvancedOptimizations All**
 
 ### Remove Internet Explorer 11 payload
 
 Since Internet Explorer 11 has been officially retired, we added the option to remove the IE11 payload from the system.  The sub-parameter is ```RemoveLegacyIE``` and is contained in the ```-AdvancedOptimizations``` parameter.  Since it is not a default setting to remove the IE11 payload you can specify it's removal in one of two ways:
 
-  **.\Windows_VDOT.ps1 -AdvancedOptimizations RemoveLegacyIE**  
-  **.\Windows_VDOT.ps1 -AdvancedOptimizations All**  
+  **.\Windows_VDOT.ps1 -AdvancedOptimizations RemoveLegacyIE**
+  **.\Windows_VDOT.ps1 -AdvancedOptimizations All**
 
 ## References
 
- [PowerShell: Running Executables](https://social.technet.microsoft.com/wiki/contents/articles/7703.powershell-running-executables.aspx)  
- [Remove-Item](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.management/remove-item?view=powershell-6)  
- [LGPO](https://techcommunity.microsoft.com/t5/microsoft-security-baselines/lgpo-exe-local-group-policy-object-utility-v1-0/ba-p/701045)  
- [Set-Service](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.management/set-service?view=powershell-7.2)  
- [Remove-Item](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.management/remove-item?view=powershell-7.2&viewFallbackFrom=powershell-6)  
- [2.2.1.7.2 GlobalFolderOptionsVista element](https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-gppref/a6ca3a17-1971-4b22-bf3b-e1a5d5c50fca)  
- [Windows 10 Release Information](https://docs.microsoft.com/en-us/windows/release-health/release-information)  
+ [PowerShell: Running Executables](https://social.technet.microsoft.com/wiki/contents/articles/7703.powershell-running-executables.aspx)
+ [Remove-Item](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.management/remove-item?view=powershell-6)
+ [LGPO](https://techcommunity.microsoft.com/t5/microsoft-security-baselines/lgpo-exe-local-group-policy-object-utility-v1-0/ba-p/701045)
+ [Set-Service](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.management/set-service?view=powershell-7.2)
+ [Remove-Item](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.management/remove-item?view=powershell-7.2&viewFallbackFrom=powershell-6)
+ [2.2.1.7.2 GlobalFolderOptionsVista element](https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-gppref/a6ca3a17-1971-4b22-bf3b-e1a5d5c50fca)
+ [Windows 10 Release Information](https://docs.microsoft.com/en-us/windows/release-health/release-information)
  [Windows 11 Release Information](https://docs.microsoft.com/en-us/windows/release-health/windows11-release-information)
 
 ## Dependencies
 
- 1. LGPO.EXE stored in the 'LGPO' folder.  
+ 1. LGPO.EXE stored in the 'LGPO' folder.
 
  > [!NOTE]
  > We may move away from the using LGPO.exe to apply policy settings at some point.  The preferred method to apply policy settings are to use a domain-based Group Policy Object (GPO).
@@ -133,8 +133,8 @@ Since Internet Explorer 11 has been officially retired, we added the option to r
  1. The PowerShell script file 'Windows_VDOT.ps1'.
  1. All VDOT files and folders.
 
-**NOTE:** This script should take just a few minutes to complete. The total runtime will be presented at the end, in the status output messages.  
-A prompt to reboot will appear when the script has completely finished running. Wait for this prompt to confirm the script has successfully completed.  
+**NOTE:** This script should take just a few minutes to complete. The total runtime will be presented at the end, in the status output messages.
+A prompt to reboot will appear when the script has completely finished running. Wait for this prompt to confirm the script has successfully completed.
 Also, the "-verbose" parameter in PowerShell directs the script to provide descriptive output as the script is running.
 
 ## Full Instructions (for all current Windows versions)
@@ -150,26 +150,26 @@ On the device that will be receiving the optimizations:
 1. In PowerShell, change directory to the scripts folder (ex. "C:\VDOT").
 1. Run the following PowerShell commands:
 
-```Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process```  
+```Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process```
 This allows for PowerShell script execution, but for only as long as the app running now is open.
 
-```.\Windows_VDOT.ps1 -Optimizations All -Verbose```  
-This will run all standard optimizations with verbose output, though the EULA will have to be manually accepted.  
+```.\Windows_VDOT.ps1 -Optimizations All -Verbose```
+This will run all standard optimizations with verbose output, though the EULA will have to be manually accepted.
 
-```.\Windows_VDOT.ps1 -Optimizations All -Verbose -AcceptEula```  
-This will run all standard optimizations with verbose output, and automatically accept Eula (for scripted running)  
+```.\Windows_VDOT.ps1 -Optimizations All -Verbose -AcceptEula```
+This will run all standard optimizations with verbose output, and automatically accept Eula (for scripted running)
 
-```.\Windows_VDOT.ps1 -Optimizations All -AdvancedOptimizations Edge -Verbose -AcceptEULA```  
+```.\Windows_VDOT.ps1 -Optimizations All -AdvancedOptimizations Edge -Verbose -AcceptEULA```
 This will run all standard optimizations, the Edge browser advanced optimizations, verbose output, and automatically accept Eula.
 
-```.\Windows_VDOT.ps1 -Optimizations AppxPackages -AcceptEULA```  
+```.\Windows_VDOT.ps1 -Optimizations AppxPackages -AcceptEULA```
 This will run AppxPackages only and auto accept the EULA
 
-```.\Windows_VDOT.ps1 -Optimizations All -AdvancedOptimizations All -Verbose -AcceptEULA -Restart```  
+```.\Windows_VDOT.ps1 -Optimizations All -AdvancedOptimizations All -Verbose -AcceptEULA -Restart```
 This will run every VDOT optimization, verbose output, automatically accept Eula, and restart the device when VDOT concludes.
 
 > [!NOTE]
- >The VDOT tool determines OS version at run-time.  You can specify a different set of configuration files by using the "-WindowsVersion" parameter.  
+ >The VDOT tool determines OS version at run-time.  You can specify a different set of configuration files by using the "-WindowsVersion" parameter.
 
 When complete, you should see a prompt to restart.  You do not have to restart right away, though it is recommended to do so.
 
@@ -184,7 +184,7 @@ When complete, you should see a prompt to restart.  You do not have to restart r
 > **IMPORTANT:** Windows cannot check certificate information (CRL) with the following setting disabled
 >
 > **Local Computer Policy \ Computer Configuration \ Administrative Templates \ System \ Internet Communication Management \ Internet Communication settings**
->  
+>
 >
 > The following setting has been removed from VDOT:
 >
@@ -192,7 +192,7 @@ When complete, you should see a prompt to restart.  You do not have to restart r
 
 > ### Disabling 'CDPSvc' can cause SystemSettings.exe to crash (01/27/2020)
 >
-> A new issue was discovered recently regarding the 'CDPSvc'. If that service is disabled, and a new user logs on to the computer then opens 'System Settings' to view display settings, 'SystemSettings.exe' will crash and log an error to the event log with code "fatal app exit".  
+> A new issue was discovered recently regarding the 'CDPSvc'. If that service is disabled, and a new user logs on to the computer then opens 'System Settings' to view display settings, 'SystemSettings.exe' will crash and log an error to the event log with code "fatal app exit".
 >
 >The setting for the 'CDPSvc' is now unchanged in 'Win10_1909_ServicesDisable.txt'.
 
@@ -208,15 +208,15 @@ When complete, you should see a prompt to restart.  You do not have to restart r
 
 > ### Some apps have no visible border in cloud environments (04/22/2020)
 >
-> In some virtual environments, such as Azure Windows Virtual Desktop, some of the application windows will have no border.  An example is Windows File Explorer.  You can replicate this by opening Wordpad and File Explorer, then move then around and note that you may not see a border where one app starts and the other ends.  
+> In some virtual environments, such as Azure Windows Virtual Desktop, some of the application windows will have no border.  An example is Windows File Explorer.  You can replicate this by opening Wordpad and File Explorer, then move then around and note that you may not see a border where one app starts and the other ends.
 >
-> One of the optimizations recently added changes the Visual Effects settings (found in System Properties) to reduce animations and effects, while still maintaining a good user experience.  
+> One of the optimizations recently added changes the Visual Effects settings (found in System Properties) to reduce animations and effects, while still maintaining a good user experience.
 >
-> * **"smoothing screen fonts"**  
+> * **"smoothing screen fonts"**
 > * **"show shadows under mouse pointer"**
-> * **"Show shadows under windows"**  
+> * **"Show shadows under windows"**
 >
-> These user settings will enable a shadow effect around the windows like File Explorer, so that the border of the app is now visible.  
+> These user settings will enable a shadow effect around the windows like File Explorer, so that the border of the app is now visible.
 >
 > These settings are written to the default user profile registry hive, so would apply only to users whose profile is created after these optimizations run, and on this device.
 
@@ -239,7 +239,7 @@ When complete, you should see a prompt to restart.  You do not have to restart r
 >
 > With the settings included in the local policy configuration, which is restored to the target during the processing of these scripts, if you attempt to run Windows Update manually, Windows may report an error.
 >
-> The reason these settings are in place in these scripts, is in case you deploy these to a target that is Internet connected, Windows Update may try to install updates while session hosts are actively being utilized. Virtual Desktop environments often control Windows Update to only be allowed during maintenance windows, or not run at all, but instead deploy new hosts.  
+> The reason these settings are in place in these scripts, is in case you deploy these to a target that is Internet connected, Windows Update may try to install updates while session hosts are actively being utilized. Virtual Desktop environments often control Windows Update to only be allowed during maintenance windows, or not run at all, but instead deploy new hosts.
 >
 > The most recent resolution for this issue is to set the **'UsoSvc'** back to the default start value of **"manual"**.
 > Alternatively, edit **'Services.json'** and change the **'VDIState'** of **'UsoSvc'** to **"unchanged"**.
@@ -256,32 +256,32 @@ When complete, you should see a prompt to restart.  You do not have to restart r
 >1. Create a script to repair the Start Menu, by copying the following to a text file, saving that as a .CMD or .BAT file, then providing that to the affected user either interactively or a logon script (normally does not require elevation).
 >
 >```bat
->   start /wait taskkill /IM StartMenuExperienceHost.exe /F  
->   rd /S /Q "%UserProfile%\Appdata\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\AC"  
->   rd /S /Q "%UserProfile%\Appdata\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\AppData"  
->   rd /S /Q "%UserProfile%\Appdata\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalCache"  
->   rd /S /Q "%UserProfile%\Appdata\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState"  
->   rd /S /Q "%UserProfile%\Appdata\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\RoamingState"  
->   rd /S /Q "%UserProfile%\Appdata\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\Settings"  
->   rd /S /Q "%UserProfile%\Appdata\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\SystemAppData"  
->   rd /S /Q "%UserProfile%\Appdata\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\TempState"  
+>   start /wait taskkill /IM StartMenuExperienceHost.exe /F
+>   rd /S /Q "%UserProfile%\Appdata\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\AC"
+>   rd /S /Q "%UserProfile%\Appdata\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\AppData"
+>   rd /S /Q "%UserProfile%\Appdata\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalCache"
+>   rd /S /Q "%UserProfile%\Appdata\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState"
+>   rd /S /Q "%UserProfile%\Appdata\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\RoamingState"
+>   rd /S /Q "%UserProfile%\Appdata\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\Settings"
+>   rd /S /Q "%UserProfile%\Appdata\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\SystemAppData"
+>   rd /S /Q "%UserProfile%\Appdata\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\TempState"
 >   Start C:\Windows\SystemApps\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\StartMenuExperienceHost.exe
 >
 >```
 >
->1. Re-run VDOT with the appropriate '-WindowsVersion' parameter (e.g. 2004).  
+>1. Re-run VDOT with the appropriate '-WindowsVersion' parameter (e.g. 2004).
 >
 >**[NOTE]** Not only will this repair the Start Menu in some cases, there are a few settings that are specific to the specific build that may not have been previously applied.
 
 >### OneDrive local policy setting prevents automatic OneDrive sign-in (01/27/2021)
 >
->There is a default setting for OneDrive set in this tool, with these details:  
+>There is a default setting for OneDrive set in this tool, with these details:
 >
->`Computer Configuration\Administrative Templates\Windows Components\OneDrive`  
->`"Prevent OneDrive from generating network traffic until the user signs in to OneDrive"`  
+>`Computer Configuration\Administrative Templates\Windows Components\OneDrive`
+>`"Prevent OneDrive from generating network traffic until the user signs in to OneDrive"`
 >
-> Default state: Not Configured  
-> Optimization tool state: Enabled  
+> Default state: Not Configured
+> Optimization tool state: Enabled
 >
 >There was another issue related to this setting also reported recently.  Some of the Office apps would "hang" for several or more seconds, until OneDrive sync was complete.  This could be related to this setting.  Therefore, revert this setting to the default state of `"not configured"`.
 >
@@ -291,19 +291,19 @@ When complete, you should see a prompt to restart.  You do not have to restart r
 >
 >We have had reports of a task window hanging at logoff, when the host is configured with multiple languages. Initial testing has shown that this is likely the result of one or more user-mode services being disabled by the script.  The services in question are:
 >
->-CDPSvc  
+>-CDPSvc
 >-CDPUserSvc
 >
 >The 'VDIState' setting of these two "per-user" services has been changed from 'Disabled' to 'Unchanged'.
 
 >### Snip & Sketch not working after optimizations (May 25, 2021)
 >
-> After running the VDOT optimizations, the 'Snip & Sketch' UWP app can be started, but clicking to perform a new capture does not work (nothing happens).  Also, clicking Snip & Sketch, an error is recorded in the Application event log, similar to the following:  
+> After running the VDOT optimizations, the 'Snip & Sketch' UWP app can be started, but clicking to perform a new capture does not work (nothing happens).  Also, clicking Snip & Sketch, an error is recorded in the Application event log, similar to the following:
 >
-> `Faulting application name: ScreenClippingHost.exe, version: 2001.22012.0.2020, time stamp: 0x5ff501a5`  
-> `Faulting module name: ScreenClipping.dll, version: 2001.22012.0.2020, time stamp: 0x5ff4fde8`  
-> `Exception code: 0x80000003`  
-> `Fault offset: 0x000000000001b92d`  
+> `Faulting application name: ScreenClippingHost.exe, version: 2001.22012.0.2020, time stamp: 0x5ff501a5`
+> `Faulting module name: ScreenClipping.dll, version: 2001.22012.0.2020, time stamp: 0x5ff4fde8`
+> `Exception code: 0x80000003`
+> `Fault offset: 0x000000000001b92d`
 This has been resolved in recent builds.
 
 > ### Note on reinstalling Appx Packages
@@ -315,7 +315,7 @@ This has been resolved in recent builds.
 
 ## Disclaimer
 
-This Sample Code is provided for the purpose of illustration only and is not intended to be used in a production environment.  
+This Sample Code is provided for the purpose of illustration only and is not intended to be used in a production environment.
 THIS SAMPLE CODE AND ANY RELATED INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED,
 INCLUDING BUT NOT LIMITED TO THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.  We grant
 You a nonexclusive, royalty-free right to use and modify the Sample Code and to reproduce and distribute the object code form
@@ -326,7 +326,7 @@ including attorneys’ fees, that arise or result from the use or distribution o
 
 Microsoft provides programming examples for illustration only, without warranty either expressed or
 implied, including, but not limited to, the implied warranties of merchantability and/or fitness
-for a particular purpose.  
+for a particular purpose.
 
 This sample assumes that you are familiar with the programming language being demonstrated and the
 tools used to create and debug procedures. Microsoft support professionals can help explain the
