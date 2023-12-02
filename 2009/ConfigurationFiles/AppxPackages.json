@@ -250,5 +250,11 @@
     "VDIState": "Disabled",
     "URL": "Unknown",
     "Description": "App added to list manually by ITaaS"
+  },
+  {
+    "AppxPackage": "MicrosoftCorporationII.QuickAssist",
+    "VDIState": "Disabled",
+    "URL": "Unknown",
+    "Description": "App added to list manually by ITaaS"
   }
 ]
