@@ -30,6 +30,11 @@ jobs:
         with:
           name: virtual-desktop-optimization-tool
           path: "${{ github.workspace }}"
+          path: |
+            "${{ github.workspace }}"
+            !.git
+            !.github
+            !.gitignore
 
 
   create-issue-on-failure:
