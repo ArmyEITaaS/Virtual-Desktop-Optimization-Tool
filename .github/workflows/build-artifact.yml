@@ -23,6 +23,7 @@ jobs:
       - name: Checkout Branch
         uses: actions/checkout@v4.1.1
 
+      # Using rsync to easily copy VDOT files while excluding hidden .git/.github files
       - name: Copy Files for Artifact
         run:  rsync -av --exclude=".*" "${{ github.workspace }}" ./artifact
 
