@@ -1,0 +1,49 @@
+name: release-artifact
+
+env:
+  ADMIN_GH_TOKEN_PAT: ${{ secrets.GH_TOKEN_PAT }}
+  AUTO_PR_GH_PAT:     ${{ secrets.AUTO_PR_GH_PAT }}
+
+  FAILED_WORKFLOW_ISSUE_CREATION_REPO_NAME:     ArmyEITaaS/Issues
+  FAILED_WORKFLOW_ISSUE_CREATION_WORKFLOW_NAME: issue-creation-workflow-failed
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 1 * *' # Once a month on the 1st of each month, keep artifact from expiring
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  release-artifact:
+    name:    Release Artifact
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Branch
+        uses: actions/checkout@v4.1.1
+
+      - name: Upload Release as Artifact
+        uses: actions/upload-artifact@v3.1.3
+        with:
+          name: virtual-desktop-optimization-tool
+          path: "${{ github.workspace }}"
+
+
+  create-issue-on-failure:
+    name:    Create Issue on Failure
+    if:      contains(fromJSON('["push", "schedule", "workflow_dispatch"]'), github.event_name) && failure()
+    needs:   [release-artifact] # Add all workflow jobs to needs to alert on failure.
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Create GitHub Issue for Failed Workflow
+        uses: ArmyEITaaS/workflow-dispatch@v1
+        with:
+          token:    ${{ env.AUTO_PR_GH_PAT }}
+          repo:     ${{ env.FAILED_WORKFLOW_ISSUE_CREATION_REPO_NAME }}
+          ref:      main
+          workflow: ${{ env.FAILED_WORKFLOW_ISSUE_CREATION_WORKFLOW_NAME }}
+          inputs:   '{"FAILED_WORKFLOW_NAME":"${{ github.workflow }}","FAILED_WORKFLOW_REPO_NAME":"${{ github.repository }}","FAILED_WORKFLOW_RUN_ID":"${{ github.run_id }}","ISSUE_TITLE_PREFIX":"${{ github.workflow }} Workflow Failed"}'
