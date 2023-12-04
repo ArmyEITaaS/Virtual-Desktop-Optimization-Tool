@@ -30,10 +30,11 @@ jobs:
         with:
           name: virtual-desktop-optimization-tool
           path: |
-            "${{ github.workspace }}"
-            !.git
-            !.github
-            !.gitignore
+            "${{ github.workspace }}/2009"
+            "${{ github.workspace }}/Images"
+            "${{ github.workspace }}/VDOT_WhatIf.ps1"
+            "${{ github.workspace }}/Windows_VDOT.ps1"
+          if-no-files-found: error
 
 
   create-issue-on-failure:
