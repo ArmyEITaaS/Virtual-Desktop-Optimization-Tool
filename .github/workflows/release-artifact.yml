@@ -29,7 +29,6 @@ jobs:
         uses: actions/upload-artifact@v3.1.3
         with:
           name: virtual-desktop-optimization-tool
-          path: "${{ github.workspace }}"
           path: |
             "${{ github.workspace }}"
             !.git
