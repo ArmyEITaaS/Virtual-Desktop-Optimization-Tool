@@ -1,8 +1,7 @@
 name: build-artifact
 
 env:
-  ADMIN_GH_TOKEN_PAT: ${{ secrets.GH_TOKEN_PAT }}
-  AUTO_PR_GH_PAT:     ${{ secrets.AUTO_PR_GH_PAT }}
+  AUTO_PR_GH_PAT: ${{ secrets.AUTO_PR_GH_PAT }}
 
   FAILED_WORKFLOW_ISSUE_CREATION_REPO_NAME:     ArmyEITaaS/Issues
   FAILED_WORKFLOW_ISSUE_CREATION_WORKFLOW_NAME: issue-creation-workflow-failed
