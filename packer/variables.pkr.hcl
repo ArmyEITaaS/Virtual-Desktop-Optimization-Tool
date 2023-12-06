@@ -1,17 +1,3 @@
-#############################################
-## Download Storage Blobs Script Variables ##
-#############################################
-
-variable "persist_storage" {
-  description = "Object for the persist storage account used for tooling and bootstrap assets"
-  type = object({
-    account_name        = string
-    resource_group_name = string
-    container_name      = string
-    blob_names_csv      = string
-  })
-}
-
 #######################
 ## Gallery Variables ##
 #######################
@@ -24,18 +10,6 @@ variable "gallery_image_definition" {
     offer     = string
     sku       = string
   })
-}
-
-variable "gallery_image_version" {
-  default     = "latest"
-  description = "The version of the gallery image"
-  type        = string
-}
-
-variable "gallery_image_version_exclude_from_latest" {
-  default     = false
-  description = "Whether to exclude the version of the gallery image from latest"
-  type        = bool
 }
 
 #######################
