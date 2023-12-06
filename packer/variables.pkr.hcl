@@ -5,10 +5,15 @@
 variable "gallery_image_definition" {
   description = "Object for the gallery image definition"
   type = object({
-    os_type   = string
-    publisher = string
-    offer     = string
-    sku       = string
+    name                 = string
+    os_type              = string
+    gallery_name         = string
+    resource_group_name  = string
+    storage_account_type = string
+    publisher            = string
+    offer                = string
+    sku                  = string
+    replication_regions  = list(string)
   })
 }
 

@@ -19,8 +19,9 @@ source "azure-arm" "windows" {
   winrm_use_ssl  = true
   winrm_username = var.winrm_username
 
-  managed_image_name                = "ignore"
-  managed_image_resource_group_name = "ignore"
+  managed_image_name                 = "ignore"
+  managed_image_resource_group_name  = var.gallery_image_definition.resource_group_name
+  managed_image_storage_account_type = var.gallery_image_definition.storage_account_type
 
   image_offer        = var.gallery_image_definition.offer
   image_publisher    = var.gallery_image_definition.publisher

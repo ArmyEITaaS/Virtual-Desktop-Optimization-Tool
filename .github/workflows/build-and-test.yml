@@ -6,10 +6,15 @@ env:
   AZURE_GOV_ENV:             AzureUSGovernment
 
   PKR_VAR_gallery_image_definition: '{
-    os_type:   "Windows",
-    publisher: "MicrosoftWindowsDesktop",
-    offer:     "windows-11",
-    sku:       "win11-23h2-avd"
+    name:                 "windows-11-AVD-STIG",
+    os_type:              "Windows",
+    gallery_name:         "DEV_AVD_CORE_WEST_Gallery",
+    resource_group_name:  "DEV-AVD-CORE-WEST-IMAGES-RG",
+    storage_account_type: "Standard_LRS",
+    publisher:            "MicrosoftWindowsDesktop",
+    offer:                "windows-11",
+    sku:                  "win11-23h2-avd",
+    replication_regions:  ["USGov Virginia", "USGov Arizona"]
   }'
   PKR_VAR_location:         usgovvirginia
   PKR_VAR_sp_client_id:     ${{ secrets.AZURE_D_ARMY_AVD_SP_CLIENT_ID }}
