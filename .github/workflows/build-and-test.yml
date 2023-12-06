@@ -33,14 +33,11 @@ jobs:
 
     steps:
       - name: Checkout Branch
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4.1.1
 
-      - name: Connect to Army AVD Subscription
-        uses: azure/login@v1
-        with:
-          creds:              ${{ env.AZURE_E_ARMY_AVD_SP_CREDS }}
-          environment:        ${{ env.AZURE_GOV_ENV }}
-          enable-AzPSSession: true
+      # Using rsync to easily copy VDOT files while excluding hidden .git/.github files
+      - name: Copy Files for Artifact
+        run:  rsync -av --exclude=".*" "${{ github.workspace }}" ./virtual-desktop-optimization-tool
 
       - name: Install Packer
         uses: ArmyEITaaS/setup-packer@main
@@ -65,8 +62,15 @@ jobs:
           path:                ${{ github.workspace }}
           repo:                ArmyEITaaS/cas-devops
 
+      - name: Connect to Army AVD Subscription
+        uses: azure/login@v1.4.7
+        with:
+          creds:              ${{ env.AZURE_E_ARMY_AVD_SP_CREDS }}
+          environment:        ${{ env.AZURE_GOV_ENV }}
+          enable-AzPSSession: true
+
       - name: Packer Cleanup
-        uses: azure/powershell@v1
+        uses: azure/powershell@v1.4.0
         with:
           azPSVersion:         "latest"
           failOnStandardError: "true"
