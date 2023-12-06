@@ -39,6 +39,13 @@ jobs:
       - name: Copy Files for Artifact
         run:  rsync -av --exclude=".*" "${{ github.workspace }}" ./virtual-desktop-optimization-tool
 
+      - name: Connect to Army AVD Subscription
+        uses: azure/login@v1.4.7
+        with:
+          creds:              ${{ env.AZURE_E_ARMY_AVD_SP_CREDS }}
+          environment:        ${{ env.AZURE_GOV_ENV }}
+          enable-AzPSSession: true
+
       - name: Install Packer
         uses: ArmyEITaaS/setup-packer@main
 
@@ -61,13 +68,6 @@ jobs:
           name:                cas-devops-modules
           path:                ${{ github.workspace }}
           repo:                ArmyEITaaS/cas-devops
-
-      - name: Connect to Army AVD Subscription
-        uses: azure/login@v1.4.7
-        with:
-          creds:              ${{ env.AZURE_E_ARMY_AVD_SP_CREDS }}
-          environment:        ${{ env.AZURE_GOV_ENV }}
-          enable-AzPSSession: true
 
       - name: Packer Cleanup
         uses: azure/powershell@v1.4.0
