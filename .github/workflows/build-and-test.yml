@@ -1,0 +1,83 @@
+name: build-and-test
+
+env:
+  ADMIN_GH_TOKEN_PAT:        ${{ secrets.GH_TOKEN_PAT }}
+  AZURE_E_ARMY_AVD_SP_CREDS: ${{ secrets.AZURE_D_ARMY_AVD_SP }}
+  AZURE_GOV_ENV:             AzureUSGovernment
+
+  PKR_VAR_gallery_image_definition: '{
+    os_type:   "Windows",
+    publisher: "MicrosoftWindowsDesktop",
+    offer:     "windows-11",
+    sku:       "win11-23h2-avd"
+  }'
+  PKR_VAR_location:         usgovvirginia
+  PKR_VAR_sp_client_id:     ${{ secrets.AZURE_D_ARMY_AVD_SP_CLIENT_ID }}
+  PKR_VAR_sp_client_secret: ${{ secrets.AZURE_D_ARMY_AVD_SP_CLIENT_SECRET }}
+  PKR_VAR_subscription_id:  ${{ secrets.AZURE_D_ARMY_AVD_SUBSCRIPTION_ID }}
+  PKR_VAR_tenant_id:        ${{ secrets.AZURE_EITAAS_TENANT_ID }}
+  PKR_VAR_vm_size:          Standard_D2ds_v5
+
+on:
+  pull_request:
+    branches: [main]
+    paths-ignore:
+    - '**/*.md'
+    - 'LICENSE'
+
+jobs:
+  packer:
+    name:        Packer
+    runs-on:     ubuntu-latest
+    environment: DEV
+
+    steps:
+      - name: Checkout Branch
+        uses: actions/checkout@v3
+
+      - name: Connect to Army AVD Subscription
+        uses: azure/login@v1
+        with:
+          creds:              ${{ env.AZURE_E_ARMY_AVD_SP_CREDS }}
+          environment:        ${{ env.AZURE_GOV_ENV }}
+          enable-AzPSSession: true
+
+      - name: Install Packer
+        uses: ArmyEITaaS/setup-packer@main
+
+      - name: Packer Init
+        run:  packer init -upgrade ./packer
+
+      - name: Packer Validate
+        run:  packer validate ./packer
+
+      - name: Packer Build
+        run:  packer build -force ./packer
+
+      - name: Download DevOps Artifact
+        uses: ArmyEITaaS/action-download-artifact@v2
+        with:
+          github_token:        ${{ env.ADMIN_GH_TOKEN_PAT }}
+          workflow:            cd-modules.yml
+          workflow_conclusion: success
+          branch:              main
+          name:                cas-devops-modules
+          path:                ${{ github.workspace }}
+          repo:                ArmyEITaaS/cas-devops
+
+      - name: Packer Cleanup
+        uses: azure/powershell@v1
+        with:
+          azPSVersion:         "latest"
+          failOnStandardError: "true"
+          inlineScript: | # Any module beginning with 'Az.' doesn't need to be manually installed when using this 'azure/powershell' GitHub Action.
+            # Packer is not cleaning up after itself when it does not remove the RG. Remove them here.
+            Import-Module -Name ./ArmyEitaasDevops/ArmyEitaasDevops.psm1
+            Write-Output 'Attempting Packer cleanup.'
+            $ResourceGroups = (Get-AzResourceGroup).Where({ $PSItem.ResourceGroupName -ilike "pkr-Resource-Group*" }).ResourceGroupName
+            if ($ResourceGroups.Count -gt 0) {
+                $params = @{
+                    ResourceGroups = $ResourceGroups
+                }
+                Remove-PackerResources @params
+            }
