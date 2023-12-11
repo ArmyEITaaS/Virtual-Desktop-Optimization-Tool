@@ -61,7 +61,7 @@ jobs:
         run:  packer build -force ./packer
 
       - name: Download DevOps Artifact
-        uses: ArmyEITaaS/action-download-artifact@v2
+        uses: ArmyEITaaS/action-download-artifact@v2.28.0
         with:
           github_token:        ${{ env.ADMIN_GH_TOKEN_PAT }}
           workflow:            cd-modules.yml
@@ -79,8 +79,9 @@ jobs:
           inlineScript: | # Any module beginning with 'Az.' doesn't need to be manually installed when using this 'azure/powershell' GitHub Action.
             # Packer is not cleaning up after itself when it does not remove the RG. Remove them here.
             Import-Module -Name ./ArmyEitaasDevops/ArmyEitaasDevops.psm1
+            $PackerResourceGroupName = ($env:PKR_VAR_gallery_image_definition | ConvertFrom-Json -AsHashtable).resource_group_name
             Write-Output 'Attempting Packer cleanup.'
-            $ResourceGroups = (Get-AzResourceGroup).Where({ $PSItem.ResourceGroupName -ilike "pkr-Resource-Group*" }).ResourceGroupName
+            $ResourceGroups = (Get-AzResourceGroup).Where({ $PSItem.ResourceGroupName -eq $PackerResourceGroupName }).ResourceGroupName
             if ($ResourceGroups.Count -gt 0) {
                 $params = @{
                     ResourceGroups = $ResourceGroups
