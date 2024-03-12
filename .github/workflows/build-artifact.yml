@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '0 0 1 * *' # Once a month on the 1st of each month, keep artifact from expiring
-  push:
+  pull_request:
     branches: [main]
 
 jobs:
