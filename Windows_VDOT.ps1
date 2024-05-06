@@ -114,15 +114,20 @@ BEGIN {
     } Else {
         New-ItemProperty -Path $KeyPath -Name $LastRun -Value $LastRunValue | Out-Null
     }
-
-    If (-not([System.Diagnostics.EventLog]::SourceExists("Virtual Desktop Optimization"))) {
+    
+    $EventSources = @('VDOT', 'WindowsMediaPlayer', 'AppxPackages', 'ScheduledTasks', 'DefaultUserSettings', 'Autologgers', 'Services', 'NetworkOptimizations', 'LGPO', 'AdvancedOptimizations', 'DiskCleanup')
+    If (-not([System.Diagnostics.EventLog]::SourceExists("Virtual Desktop Optimization")))
+    {
         # All VDOT main function Event ID's [1-9]
-        $EventSources = @('VDOT', 'WindowsMediaPlayer', 'AppxPackages', 'ScheduledTasks', 'DefaultUserSettings', 'Autologgers', 'Services', 'NetworkOptimizations', 'LGPO', 'AdvancedOptimizations', 'DiskCleanup')
         New-EventLog -Source $EventSources -LogName 'Virtual Desktop Optimization'
         Limit-EventLog -OverflowAction OverWriteAsNeeded -MaximumSize 64KB -LogName 'Virtual Desktop Optimization'
         Write-EventLog -LogName 'Virtual Desktop Optimization' -Source 'VDOT' -EntryType Information -EventId 1 -Message "Log Created"
     }
-    Write-EventLog -LogName 'Virtual Desktop Optimization' -Source 'VDOT' -EntryType Information -EventId 1 -Message "Starting VDOT by user '$env:USERNAME', for VDOT build '$WindowsVersion', with the following options:`n$($PSBoundParameters | Out-String)"
+    Else 
+    {
+        New-EventLog -Source $EventSources -LogName 'Virtual Desktop Optimization' -ErrorAction SilentlyContinue
+    }
+    Write-EventLog -LogName 'Virtual Desktop Optimization' -Source 'VDOT' -EntryType Information -EventId 1 -Message "Starting VDOT by user '$env:USERNAME', for VDOT build '$WindowsVersion', with the following options:`n$($PSBoundParameters | Out-String)" 
 
     $StartTime = Get-Date
     $CurrentLocation = Get-Location
@@ -472,10 +477,12 @@ PROCESS {
                             If (Test-Path $Key.RegItemPath) {
                                 Write-EventLog -EventId 80 -Message "Path found, creating new property -Path $($Key.RegItemPath) -Name $($Key.RegItemValueName) -PropertyType $($Key.RegItemValueType) -Value $($Key.RegItemValue)" -LogName 'Virtual Desktop Optimization' -Source 'LGPO' -EntryType Information
                                 Write-Verbose "Path found, creating new property -Path $($Key.RegItemPath) Name $($Key.RegItemValueName) PropertyType $($Key.RegItemValueType) Value $($Key.RegItemValue)"
-                                New-ItemProperty -Path $Key.RegItemPath -Name $Key.RegItemValueName -PropertyType $Key.RegItemValueType -Value $Key.RegItemValue -Force | Out-Null
-                            } Else {
-                                Write-EventLog -EventId 80 -Message "Creating Key and Path" -LogName 'Virtual Desktop Optimization' -Source 'LGPO' -EntryType Information
-                                Write-Verbose "Creating Key and Path"
+                                New-ItemProperty -Path $Key.RegItemPath -Name $Key.RegItemValueName -PropertyType $Key.RegItemValueType -Value $Key.RegItemValue -Force | Out-Null 
+                            }
+                            Else
+                            {
+                                Write-EventLog -EventId 80 -Message "Error: Creating Name $($Key.RegItemValueName), Value $($Key.RegItemValue) and Path $($Key.RegItemPath)" -LogName 'Virtual Desktop Optimization' -Source 'LGPO' -EntryType Information
+                                Write-Verbose "Error: Creating Name $($Key.RegItemValueName), Value $($Key.RegItemValue) and Path $($Key.RegItemPath)"
                                 New-Item -Path $Key.RegItemPath -Force | New-ItemProperty -Name $Key.RegItemValueName -PropertyType $Key.RegItemValueType -Value $Key.RegItemValue -Force | Out-Null
                             }
 
