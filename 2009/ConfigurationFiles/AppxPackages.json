@@ -1,5 +1,11 @@
 [
   {
+    "AppxPackage": "Bing Search",
+    "VDIState": "Unchanged",
+    "URL": "https://apps.microsoft.com/detail/9nzbf4gt040c",
+    "Description": "Web Search from Microsoft Bing provides web results and answers in Windows Search"
+  },
+  {
     "AppxPackage": "Clipchamp.Clipchamp",
     "VDIState": "Disabled",
     "URL": "https://apps.microsoft.com/detail/9p1j8s7ccwwt?hl=en-us&gl=US",
@@ -27,7 +33,7 @@
     "AppxPackage": "Microsoft.DesktopAppInstaller",
     "VDIState": "Unchanged",
     "URL": "https://apps.microsoft.com/detail/9NBLGGH4NNS1",
-    "Description": "Microsoft App Installer for Windows 10 makes sideloading Windows 10 apps easy"
+    "Description": "Microsoft App Installer for Windows 10 makes sideloading Windows apps easy"
   },
   {
     "AppxPackage": "Microsoft.GamingApp",
@@ -86,7 +92,7 @@
   {
     "AppxPackage": "Microsoft.Paint",
     "VDIState": "Unchanged",
-    "URL": "https://apps.microsoft.com/detail/9PCFS5B6T72H?hl=en-us&gl=US",
+    "URL": "https://apps.microsoft.com/detail/9PCFS5B6T72H",
     "Description": "Classic Paint app"
   },
   {
@@ -290,7 +296,13 @@
   {
     "AppxPackage": "MicrosoftTeams",
     "VDIState": "Disabled",
-    "URL": "https://www.microsoft.com/en-us/microsoft-teams/group-chat-software",
+    "URL": "https://apps.microsoft.com/detail/xp8bt8dw290mpq",
+    "Description": "Microsoft communication platform"
+  },
+  {
+    "AppxPackage": "MSTeams",
+    "VDIState": "Disabled",
+    "URL": "https://apps.microsoft.com/detail/xp8bt8dw290mpq",
     "Description": "Microsoft communication platform"
   },
   {
