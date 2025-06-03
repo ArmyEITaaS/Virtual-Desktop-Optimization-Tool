@@ -7,11 +7,11 @@ env:
   FAILED_WORKFLOW_ISSUE_CREATION_WORKFLOW_NAME: issue-creation-workflow-failed
 
 on:
-  workflow_dispatch:
-  schedule:
-    - cron: '0 0 1 * *' # Once a month on the 1st of each month, keep artifact from expiring
   pull_request:
     branches: [main]
+  schedule:
+    - cron: '0 0 1 * *' # Once a month on the 1st of each month, keep artifact from expiring
+  workflow_dispatch:
 
 jobs:
   build-artifact:
@@ -20,14 +20,14 @@ jobs:
 
     steps:
       - name: Checkout Branch
-        uses: actions/checkout@v4.1.1
+        uses: actions/checkout@v4.2.2
 
       # Using rsync to easily copy VDOT files while excluding hidden .git/.github files
       - name: Copy Files for Artifact
         run:  rsync -av --exclude=".*" "${{ github.workspace }}" ./artifact
 
       - name: Upload as Artifact
-        uses: actions/upload-artifact@v4.3.2
+        uses: actions/upload-artifact@v4.6.2
         with:
           name:              virtual-desktop-optimization-tool
           path:              "${{ github.workspace }}/artifact"
