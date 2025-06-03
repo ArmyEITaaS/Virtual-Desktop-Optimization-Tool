@@ -102,7 +102,6 @@
   {
     "ScheduledTask": "StartComponentCleanup",
     "VDIState": "Disabled",
-    "URL": "https://docs.microsoft.com/en-us/windows-hardware/manufacture/desktop/clean-up-the-winsxs-folder",
     "Description": "Servicing task that may be better performed during maintenance windows"
   },
   {
@@ -128,21 +127,21 @@
   {
     "ScheduledTask": "VerifyWinRE",
     "VDIState": "Disabled",
-    "Description": "Customer Experience Improvement Program task"
+    "Description": "Validates the Windows Recovery Environment."
   },
   {
     "ScheduledTask": "Work Folders Logon Synchronization",
     "VDIState": "Disabled",
-    "Description": "Customer Experience Improvement Program task"
+    "Description": "This task initiates synchronization of Work Folders partnerships when a user logs onto the system."
   },
   {
     "ScheduledTask": "Work Folders Maintenance Work",
     "VDIState": "Disabled",
-    "Description": "Customer Experience Improvement Program task"
+    "Description": "This task initiates maintenance work required for on-going good performance of data synchronization of Work Folders partnerships."
   },
   {
     "ScheduledTask": "Restore",
-    "VDIState": "Unchanged",
+    "VDIState": "Disabled",
     "Description": "Handles restoring settings from the cloud"
   }
 ]
