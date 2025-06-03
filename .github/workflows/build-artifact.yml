@@ -7,11 +7,11 @@ env:
   FAILED_WORKFLOW_ISSUE_CREATION_WORKFLOW_NAME: issue-creation-workflow-failed
 
 on:
-  workflow_dispatch:
-  schedule:
-    - cron: '0 0 1 * *' # Once a month on the 1st of each month, keep artifact from expiring
   pull_request:
     branches: [main]
+  schedule:
+    - cron: '0 0 1 * *' # Once a month on the 1st of each month, keep artifact from expiring
+  workflow_dispatch:
 
 jobs:
   build-artifact:
